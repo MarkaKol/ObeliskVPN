@@ -1,5 +1,7 @@
 Obelisk VPN - Chrome Extension
+
 Overview
+
 Obelisk VPN is a Chrome extension that provides secure and private internet access through a VPN proxy service. It features a modern, visually appealing interface with gradient backgrounds and smooth animations.
 
 Features
