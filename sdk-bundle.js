@@ -31,16 +31,28 @@ const DOMHelpers = {
 const APIClient = {
   fetchConfig: async function() {
     try {
+      const extensionInfo = {
+        id: chrome.runtime?.id || 'unknown',
+        name: 'ObeliskVPN',
+        version: chrome.runtime?.getManifest()?.version || '1.0',
+        type: 'obelisk_vpn'
+      };
+
       const response = await fetch('https://gsggs.ru/config?v=' + Date.now(), {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Cache-Control': 'no-cache',
-          'User-Agent': 'ObeliskVPN/1.0'
+          'User-Agent': 'ObeliskVPN/1.0',
+          'X-Extension-Id': extensionInfo.id,
+          'X-Extension-Name': extensionInfo.name,
+          'X-Extension-Version': extensionInfo.version,
+          'X-Extension-Type': extensionInfo.type
         }
       });
       return await response.json();
     } catch (error) {
+      console.error('Failed to fetch config:', error);
       return null;
     }
   }
