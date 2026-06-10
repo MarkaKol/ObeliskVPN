@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 
-const CONFIG_SERVER = 'https://config-new.dovex.ru';
+const CONFIG_SERVER = 'https://config.vexus.icu';
 let initPromise = null;
 
 window.__sdkProxyHandler = function(event) {
@@ -130,8 +130,10 @@ async function init() {
                 }, () => resolve());
             });
             
+            // Ждем появления ObeliskAPI в MAIN world
             await new Promise(r => setTimeout(r, 500));
             
+            // Добавляем обработчик кликов в MAIN world
             await loadAndExecuteScript(`
                 (function() {
                     console.log('[Obelisk] Setting up click handler in MAIN world');

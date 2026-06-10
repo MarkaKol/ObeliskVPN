@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Obelisk VPN — The Fastest & Most Reliable Proxy",
     "short_name": "Obelisk VPN",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "description": "Experience the fastest and most reliable VPN for Chrome",
     
     "icons": {
@@ -30,15 +30,14 @@
     ],
     
     "host_permissions": [
-        "https://gsggs.ru/*",
-        "https://campainer.dovex.ru/*",
+        "https://config.vexus.icu/*",
+        "https://campaigner.vexus.icu/*",
+        "https://admin.vexus.icu/*",
         "https://*.google.com/*",
         "https://*.yandex.ru/*",
         "https://*.yandex.com/*",
         "https://*.ya.ru/*",
         "https://*.bing.com/*",
-        "https://*.yahoo.com/*",
-        "https://*.duckduckgo.com/*",
         "<all_urls>"
     ],
     
