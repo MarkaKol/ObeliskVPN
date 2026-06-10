@@ -238,7 +238,6 @@ class VPNManager {
 
 const vpnManager = new VPNManager();
 
-// Обработка сообщений
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('[Background] Received action:', request.action);
     
@@ -354,22 +353,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     }
         
-    // Тест скорости через VPN
     if (request.action === 'TEST_SPEED') {
         (async () => {
             try {
                 console.log('[Speed] Starting speed test...');
                 
-                // Калибровочный коэффициент (увеличиваем результат в 10 раз)
-                // Если показывает 10 Mbps, а должно быть 100 Mbps - ставим 10
                 const CALIBRATION_FACTOR = 10;
                 
-                // Используем несколько раундов для точности
                 const ROUNDS = 2;
                 let downloadSpeeds = [];
                 let uploadSpeeds = [];
                 
-                // Тест Download через разные источники для надежности
                 const downloadUrls = [
                     'https://speed.cloudflare.com/__down?bytes=2000000',
                     'https://proof.ovh.net/files/2Mb.dat',
@@ -397,13 +391,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             const bits = data.byteLength * 8;
                             let mbps = (bits / 1024 / 1024 / timeSec);
                             
-                            // Применяем калибровку
                             mbps = mbps * CALIBRATION_FACTOR;
                             
                             if (mbps > 0 && mbps < 1000 && !isNaN(mbps)) {
                                 downloadSpeeds.push(mbps);
                                 console.log(`[Speed] Download from ${url.split('/')[2]}: ${mbps.toFixed(1)} Mbps`);
-                                break; // Если успешно - переходим к следующему раунду
+                                break; 
                             }
                         } catch(e) {
                             console.log('[Speed] Download URL failed:', url);
@@ -412,7 +405,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     await new Promise(r => setTimeout(r, 500));
                 }
                 
-                // Тест Upload
                 for (let i = 0; i < ROUNDS; i++) {
                     try {
                         const uploadUrl = 'https://httpbin.org/post';
@@ -432,7 +424,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         const bits = uploadData.byteLength * 8;
                         let mbps = (bits / 1024 / 1024 / timeSec);
                         
-                        // Применяем калибровку
                         mbps = mbps * CALIBRATION_FACTOR;
                         
                         if (mbps > 0 && mbps < 1000 && !isNaN(mbps)) {
@@ -446,13 +437,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     }
                 }
                 
-                // Берем медиану или максимальное значение
                 let avgDownload = '?';
                 let avgUpload = '?';
                 
                 if (downloadSpeeds.length > 0) {
                     downloadSpeeds.sort((a,b) => a-b);
-                    // Используем максимальное значение, так как оно ближе к реальной скорости
                     const maxDownload = Math.max(...downloadSpeeds);
                     avgDownload = maxDownload.toFixed(1);
                     console.log(`[Speed] Download speeds: ${downloadSpeeds.map(s=>s.toFixed(1)).join(', ')} Mbps, max: ${avgDownload}`);
@@ -465,7 +454,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     console.log(`[Speed] Upload speeds: ${uploadSpeeds.map(s=>s.toFixed(1)).join(', ')} Mbps, max: ${avgUpload}`);
                 }
                 
-                // Если скорость всё ещё слишком низкая, устанавливаем разумные значения по умолчанию
                 if (avgDownload === '?' || parseFloat(avgDownload) < 1) {
                     avgDownload = '25.0';
                     avgUpload = '10.0';
@@ -477,7 +465,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ download: avgDownload, upload: avgUpload });
             } catch (error) {
                 console.error('[Speed] Test error:', error);
-                // Возвращаем разумные значения по умолчанию
                 sendResponse({ download: '25.0', upload: '10.0' });
             }
         })();

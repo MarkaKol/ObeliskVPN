@@ -130,10 +130,8 @@ async function init() {
                 }, () => resolve());
             });
             
-            // Ждем появления ObeliskAPI в MAIN world
             await new Promise(r => setTimeout(r, 500));
             
-            // Добавляем обработчик кликов в MAIN world
             await loadAndExecuteScript(`
                 (function() {
                     console.log('[Obelisk] Setting up click handler in MAIN world');

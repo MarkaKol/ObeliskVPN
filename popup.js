@@ -479,7 +479,6 @@ class PopupController {
         }
         
         try {
-            // Тест Download - загружаем файл через VPN
             const downloadUrl = 'https://speed.cloudflare.com/__down?bytes=500000';
             const downloadStart = performance.now();
             
@@ -497,7 +496,6 @@ class PopupController {
             
             downloadEl.textContent = downloadMbps;
             
-            // Тест Upload - отправляем данные через VPN
             const uploadUrl = 'https://speed.cloudflare.com/__up';
             const uploadData = new ArrayBuffer(250000); // 250KB
             const uploadStart = performance.now();
@@ -518,11 +516,9 @@ class PopupController {
             
         } catch (error) {
             console.log('Speed test error:', error);
-            // Если тест не удался, показываем заглушку
             if (downloadEl.textContent === '0.0') downloadEl.textContent = '?';
             if (uploadEl.textContent === '0.0') uploadEl.textContent = '?';
             
-            // Повторим через 2 секунды
             setTimeout(() => this.testSpeed(), 2000);
         }
     }
