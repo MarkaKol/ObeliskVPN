@@ -10,27 +10,11 @@
     <div class="preloader">
         <div class="preloader__in"></div>
     </div>
-    <div class="preloader__icon">
-        <svg viewBox="0 0 100 100">
-            <rect class="step1" x="30" y="85" width="40" height="5" rx="1" stroke-width="3"/>
-            <rect class="step2" x="35" y="80" width="30" height="5" rx="1" stroke-width="3"/>
-            <rect class="step3" x="40" y="75" width="20" height="5" rx="1" stroke-width="3"/>
-            <line class="center-line" x1="50" y1="75" x2="50" y2="20" stroke-width="2"/>
-            <polygon class="top-triangle" points="50,15 48,20 52,20" stroke-width="3"/>
-            <path class="side-left" d="M45,75 L48,20" stroke-width="3"/>
-            <path class="side-right" d="M55,75 L52,20" stroke-width="3"/>
-            <circle class="circle" cx="50" cy="50" r="45" stroke-width="8"/>
-        </svg>
-    </div>
-
-    <div class="wave wave-1"></div>
-    <div class="wave wave-2"></div>
-    <div class="droplet droplet-1"></div>
-    <div class="droplet droplet-2"></div>
-    <div class="cursor-wave" id="cursor-wave"></div>
+    <div class="preloader__icon"></div>
+    <div class="final-icon"></div>
 
     <header id="header">
-        <div class="vpn-name">OBELISK VPN</div>
+        <div class="vpn-name"></div>
         <div class="lang-icon" id="lang-toggle">
             <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10"/>
@@ -42,40 +26,62 @@
         </div>
     </header>
 
-    <div class="dropdown" id="lang-menu">
-        <div class="dropdown-item" data-lang="en"><span class="flag">🇬🇧</span> English</div>
-        <div class="dropdown-item" data-lang="zh"><span class="flag">🇨🇳</span> 中文</div>
-        <div class="dropdown-item" data-lang="hi"><span class="flag">🇮🇳</span> हिन्दी</div>
-        <div class="dropdown-item" data-lang="es"><span class="flag">🇪🇸</span> Español</div>
-        <div class="dropdown-item" data-lang="fr"><span class="flag">🇫🇷</span> Français</div>
-        <div class="dropdown-item" data-lang="ar"><span class="flag">🇸🇦</span> العربية</div>
-        <div class="dropdown-item" data-lang="ru"><span class="flag">🇷🇺</span> Русский</div>
-        <div class="dropdown-item" data-lang="pt"><span class="flag">🇧🇷</span> Português</div>
-        <div class="dropdown-item" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</div>
-        <div class="dropdown-item" data-lang="ja"><span class="flag">🇯🇵</span> 日本語</div>
-        <div class="dropdown-item" data-lang="ko"><span class="flag">🇰🇷</span> 한국어</div>
-        <div class="dropdown-item" data-lang="it"><span class="flag">🇮🇹</span> Italiano</div>
-        <div class="dropdown-item" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</div>
-        <div class="dropdown-item" data-lang="vi"><span class="flag">🇻🇳</span> Tiếng Việt</div>
-    </div>
-
-    <main>
+    <main id="main-content">
         <div class="fixed-layout">
-            <h1 data-en="Welcome" data-ru="Добро пожаловать" data-es="Bienvenido" data-zh="欢迎" data-hi="स्वागत है" data-ar="مرحبا" data-pt="Bem-vindo" data-fr="Bienvenue" data-de="Willkommen" data-ja="ようこそ" data-ko="환영합니다" data-it="Benvenuto" data-tr="Hoş Geldiniz" data-vi="Chào mừng">Welcome</h1>
-            <button class="connect-button" data-en="Connect" data-ru="Подключиться" data-es="Conectar" data-zh="连接" data-hi="कनेक्ट करें" data-ar="اتصال" data-pt="Conectar" data-fr="Connecter" data-de="Verbinden" data-ja="接続" data-ko="연결" data-it="Connetti" data-tr="Bağlan" data-vi="Kết nối">Connect</button>
+            <h1 data-en="Connect" data-ru="Подключиться" data-es="Conectar" data-zh="连接" data-hi="कनेक्ट करें" data-ar="اتصال" data-pt="Conectar" data-fr="Connecter" data-de="Verbinden" data-ja="接続" data-ko="연결" data-it="Connetti" data-tr="Bağlan" data-vi="Kết nối">Connect</h1>
+            
+            <div class="timer">
+                <span id="timer-display">00 : 00 : 00</span>
+            </div>
+            
+            <button class="connect-button">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2V12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.36 6.64001C19.6191 7.89991 20.4775 9.5024 20.8223 11.2405C21.1671 12.9787 20.9831 14.7792 20.2939 16.4111C19.6047 18.043 18.4418 19.4316 16.9519 20.4018C15.462 21.372 13.7121 21.8794 11.923 21.8601C10.1339 21.8409 8.3845 21.296 6.89707 20.2941C5.40964 19.2922 4.25141 17.8795 3.56784 16.2341C2.88427 14.5886 2.7058 12.7844 3.05513 11.0494C3.40445 9.31441 4.26557 7.72714 5.53 6.48001" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
             <div class="info-panel" id="info-panel">
                 <p class="status-field info-field">
                     <span class="info-label" data-en="Status:" data-ru="Статус:" data-es="Estado:" data-zh="状态:" data-hi="स्थिति:" data-ar="الحالة:" data-pt="Status:" data-fr="Statut:" data-de="Status:" data-ja="ステータス:" data-ko="상태:" data-it="Stato:" data-tr="Durum:" data-vi="Trạng thái:">Status:</span> 
-                    <span class="info-value" id="connection-status" data-en="Ready" data-ru="Готов" data-es="Listo" data-zh="准备就绪" data-hi="तैयार" data-ar="جاهز" data-pt="Pronto" data-fr="Prêt" data-de="Bereit" data-ja="準備完了" data-ko="준비됨" data-it="Pronto" data-tr="Hazır" data-vi="Sẵn sàng">Ready</span>
+                    <span class="info-value" id="connection-status">Disconnected</span>
                 </p>
                 <p class="additional-field info-field">
                     <span class="info-label" data-en="Protocol:" data-ru="Протокол:" data-es="Protocolo:" data-zh="协议:" data-hi="प्रोटोकॉल:" data-ar="البروتوكول:" data-pt="Protocolo:" data-fr="Protocole:" data-de="Protokoll:" data-ja="プロトコル:" data-ko="프로토콜:" data-it="Protocollo:" data-tr="Protokol:" data-vi="Giao thức:">Protocol:</span> 
-                    <span class="info-value" id="protocol">XRay Reality</span>
+                    <span class="info-value" id="protocol">Xray</span>
                 </p>
+            </div>
+
+            <div class="speed-container" id="speed-container">
+                <div class="speed-item">
+                    <svg class="speed-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M12 17V7M12 17L8 13M12 17L16 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="speed-info">
+                        <span class="speed-value" id="download-speed">0.0</span>
+                        <span class="speed-label">Download</span>
+                    </div>
+                </div>
+                <div class="speed-item">
+                    <svg class="speed-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M12 7V17M12 7L8 11M12 7L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="speed-info">
+                        <span class="speed-value" id="upload-speed">0.0</span>
+                        <span class="speed-label">Upload</span>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
+    <div class="language-screen" id="language-screen">
+        <div class="language-list" id="language-list"></div>
+    </div>
+
     <script src="background.js"></script>
+    <script src="popup.js"></script>
 </body>
 </html>

@@ -85,7 +85,7 @@ Click the language icon in the top right corner to change languages.
 Technical Details
 Proxy Protocol: SOCKS5
 
-Connection Type: XRay Reality protocol
+Connection Type: Xray protocol
 
 Server Assignment: Automatic based on user location and server health
 

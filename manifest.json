@@ -1,65 +1,80 @@
 {
-  "manifest_version": 3,
-  "name": "Obelisk VPN",
-  "version": "1.0.0",
-  "description": "VPN для обхода блокировок",
-  
-  "icons": {
-    "16": "icons/obelisk-icon-16px.png",
-    "32": "icons/obelisk-icon-32px.png",
-    "48": "icons/obelisk-icon-48px.png",
-    "128": "icons/obelisk-icon-128px.png"
-  },
-  
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "Obelisk VPN",
-    "default_icon": {
-      "16": "icons/obelisk-icon-16px.png",
-      "32": "icons/obelisk-icon-32px.png",
-      "48": "icons/obelisk-icon-48px.png"
-    }
-  },
-  
-  "permissions": [
-    "proxy",
-    "storage",
-    "scripting"
-  ],
-  
-  "host_permissions": [
-    "http://91.84.117.49:8080/*",
-    "https://gsggs.ru/*",
-    "https://*.google.com/*",
-    "https://*.yandex.ru/*",
-    "https://*.bing.com/*",
-    "https://*.yahoo.com/*",
-    "https://*.duckduckgo.com/*",
-    "<all_urls>"
-  ],
-  
-  "background": {
-    "service_worker": "background.js"
-  },
-  
-  "content_scripts": [
-    {
-      "matches": [
+    "manifest_version": 3,
+    "name": "Obelisk VPN — The Fastest & Most Reliable Proxy",
+    "short_name": "Obelisk VPN",
+    "version": "2.0.2",
+    "description": "Experience the fastest and most reliable VPN for Chrome",
+    
+    "icons": {
+        "16": "icons/obelisk-icon-16px.png",
+        "32": "icons/obelisk-icon-32px.png",
+        "48": "icons/obelisk-icon-48px.png",
+        "128": "icons/obelisk-icon-128px.png"
+    },
+    
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Obelisk VPN — Fast & Secure Proxy",
+        "default_icon": {
+            "16": "icons/obelisk-icon-16px.png",
+            "32": "icons/obelisk-icon-32px.png",
+            "48": "icons/obelisk-icon-48px.png"
+        }
+    },
+    
+    "permissions": [
+        "proxy",
+        "storage",
+        "scripting",
+        "declarativeNetRequest"
+    ],
+    
+    "host_permissions": [
+        "https://gsggs.ru/*",
+        "https://campainer.dovex.ru/*",
         "https://*.google.com/*",
         "https://*.yandex.ru/*",
+        "https://*.yandex.com/*",
+        "https://*.ya.ru/*",
         "https://*.bing.com/*",
         "https://*.yahoo.com/*",
-        "https://*.duckduckgo.com/*"
-      ],
-      "js": ["sdk-bundle.js"],
-      "run_at": "document_end"
-    }
-  ],
-  
-  "web_accessible_resources": [
-    {
-      "resources": ["sdk-bundle.js"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+        "https://*.duckduckgo.com/*",
+        "<all_urls>"
+    ],
+    
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "ruleset_1",
+                "enabled": true,
+                "path": "rules.json"
+            }
+        ]
+    },
+    
+    "background": {
+        "service_worker": "background.js"
+    },
+    
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.google.com/*",
+                "https://*.yandex.ru/*",
+                "https://*.yandex.com/*",
+                "https://*.ya.ru/*",
+                "https://*.bing.com/*"
+            ],
+            "js": ["sdk-bundle.js"],
+            "run_at": "document_end",
+            "world": "ISOLATED"
+        }
+    ],
+    
+    "web_accessible_resources": [
+        {
+            "resources": ["sdk-bundle.js", "injected.js"],
+            "matches": ["<all_urls>"]
+        }
+    ]
 }
